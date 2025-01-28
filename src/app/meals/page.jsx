@@ -1,24 +1,18 @@
-"use client";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { kE } from "./../../../node_modules/culori/src/dlch/constants";
+import MealSearch from "./components/MealSearch";
 
-const MealsData = () => {
-  const [data, setData] = useState([]);
-  const [search, setSearch] = useState("");
-
+const MealsData = async ({ searchParams }) => {
+  const query = (await searchParams?.search) || "";
   // for load data
   const fetchData = async () => {
-    const response = await axios(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`
-    );
-    console.log(response.data);
-    setData(response.data.meals);
+      const response = await axios.get(
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+      );
+      return response.data.meals;
+
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [search]);
+  const data = await fetchData();
 
   return (
     <div>
@@ -30,26 +24,30 @@ const MealsData = () => {
           officia culpa exercitationem quasi vitae. Incidunt quisquam deserunt
           non magni reiciendis nisi.
         </p>
+        <MealSearch />
       </div>
 
       <div className="grid grid-cols-4 gap-5 px-16 mt-10">
-        {data.map((meal) => (
-          <div key={meal.idMeal} className="card bg-base-100 shadow-xl">
-            <figure>
-              <img className=""
-                src={meal.strMealThumb}
-                alt="Shoes"
-              />
-            </figure>
-            <div className="card-body">
-              <h2 className="card-title">Shoes!</h2>
-              <p>If a dog chews shoes whose shoes does he choose?</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Buy Now</button>
+        {data ? (
+          data.map((meal) => (
+            <div key={meal.idMeal} className="card bg-base-100 shadow-xl">
+              <figure>
+                <img src={meal.strMealThumb} alt={meal.strMeal} />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">{meal.strMeal}</h2>
+                <p>{meal.strInstructions.slice(0, 100)}...</p>
+                <div className="card-actions justify-end">
+                  <button className="btn btn-primary">View Recipe</button>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="col-span-4 text-center text-red-500">
+            No meals found. Try searching for something else.
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
