@@ -7,10 +7,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import UserInfo from '@/components/UserInfo';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
 
 
 
-const Home = async() => {
+const Home = async () => {
+  const session = await getServerSession(authOptions)
   return (
     <div>
 
@@ -26,7 +30,10 @@ const Home = async() => {
     </DialogHeader>
   </DialogContent>
 </Dialog>
-
+      user information form client
+      <UserInfo />
+      
+      user infor from sever {JSON.stringify(session)}
 </div>
   );
 };

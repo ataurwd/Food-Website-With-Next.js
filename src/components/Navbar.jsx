@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import LoginBtn from './LoginBtn';
 
 const Navbar = () => {
   return (
@@ -31,6 +32,7 @@ const Navbar = () => {
               Meals
             </Link>
           </li>
+          <LoginBtn/>
         </ul>
       </div>
     </nav>
